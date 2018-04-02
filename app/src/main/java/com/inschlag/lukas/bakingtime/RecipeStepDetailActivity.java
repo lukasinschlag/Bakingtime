@@ -2,6 +2,7 @@ package com.inschlag.lukas.bakingtime;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
 import com.squareup.picasso.Picasso;
 
@@ -22,9 +24,9 @@ import io.realm.Realm;
 
 public class RecipeStepDetailActivity extends AppCompatActivity {
 
-    public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_STEP = "step";
-    public static final String ARG_INGREDIENT = "ingredient";
+    private static final String ARG_STEPS = "numberOfSteps";
+    private static final String ARG_CURRENT = "currentItem";
+    private static final String ARG_FRAGMENT_TAG = "stepDetailFragment";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -37,6 +39,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     @BindView(R.id.recipe_detail_container)
     NestedScrollView mDetailContainer;
 
+    private Fragment mFragment;
     private int mRecipeId = 0;
     private int mNumSteps = 0;
     private int mCurrentItem = -1;
@@ -60,7 +63,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             Realm realm = Realm.getDefaultInstance();
-            mRecipeId = getIntent().getIntExtra(ARG_ITEM_ID, 0);
+            mRecipeId = getIntent().getIntExtra(Constants.ARG_ITEM_ID, 0);
 
             Recipe recipe = realm.where(Recipe.class)
                     .equalTo("id", mRecipeId)
@@ -84,13 +87,27 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             // it gets either the recipe id (if showing the ingredients) or the step id (showing a step)
-            if(getIntent().hasExtra(ARG_INGREDIENT)){
+            if(getIntent().hasExtra(Constants.ARG_INGREDIENT)){
                 showIngredients();
-            } else if(getIntent().hasExtra(ARG_STEP)) {
-                showStep(getIntent().getIntExtra(ARG_STEP, 0));
+            } else if(getIntent().hasExtra(Constants.ARG_STEP)) {
+                showStep(getIntent().getIntExtra(Constants.ARG_STEP, 0));
             }
             setNavButtons(mCurrentItem);
+        } else { //restore the state on orientation change
+            Log.d("StepDetail", "restoreState");
+            mRecipeId = savedInstanceState.getInt(Constants.ARG_ITEM_ID);
+            mNumSteps = savedInstanceState.getInt(ARG_STEPS);
+            mCurrentItem = savedInstanceState.getInt(ARG_CURRENT);
+            mFragment = getSupportFragmentManager().findFragmentByTag(ARG_FRAGMENT_TAG);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(Constants.ARG_ITEM_ID, mRecipeId);
+        outState.putInt(ARG_STEPS, mNumSteps);
+        outState.putInt(ARG_CURRENT, mCurrentItem);
+        super.onSaveInstanceState(outState);
     }
 
     private final View.OnClickListener mOnPrevClickListener = new View.OnClickListener() {
@@ -135,29 +152,38 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
 
     private void showIngredients(){
         Log.d(getClass().getCanonicalName(), "Show ingredients fragment");
-        mDetailContainer.removeAllViews();
+
         mCurrentItem = -1;
         Bundle arguments = new Bundle();
-        arguments.putInt(ARG_ITEM_ID, mRecipeId);
+        arguments.putInt(Constants.ARG_ITEM_ID, mRecipeId);
         RecipeDetailFragment fragment = new RecipeDetailFragment();
         fragment.setArguments(arguments);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.recipe_detail_container, fragment)
-                .commit();
+        setFragment(fragment);
     }
 
     private void showStep(int id){
         Log.d(getClass().getCanonicalName(), "Show step fragment");
-        mDetailContainer.removeAllViews();
+
         mCurrentItem = id;
         Bundle arguments = new Bundle();
-        arguments.putInt(ARG_ITEM_ID, mRecipeId);
-        arguments.putInt(ARG_STEP, mCurrentItem);
+        arguments.putInt(Constants.ARG_ITEM_ID, mRecipeId);
+        arguments.putInt(Constants.ARG_STEP, mCurrentItem);
         RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
         fragment.setArguments(arguments);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.recipe_detail_container, fragment)
-                .commit();
+        setFragment(fragment);
+    }
+
+    private void setFragment(Fragment fragment){
+        if(mFragment == null){
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.recipe_detail_container, fragment, ARG_FRAGMENT_TAG)
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.recipe_detail_container, fragment, ARG_FRAGMENT_TAG)
+                    .commit();
+        }
+        mFragment = fragment;
     }
 
     @Override

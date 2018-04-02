@@ -1,29 +1,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:orientation="vertical"
     android:padding="@dimen/app_default_padding"
     tools:context="com.inschlag.lukas.bakingtime.RecipeDetailFragment">
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/videoPlayer"
-        android:layout_marginBottom="@dimen/text_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        app:resize_mode="fixed_width" />
 
     <TextView
+        style="@style/AppTheme.ListItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/app_default_padding"
-        android:textColor="@color/colorAccent"
         android:text="@string/desc"
-        style="@style/AppTheme.ListItem"/>
+        android:textColor="?colorAccent" />
 
     <TextView
         android:id="@+id/stepDesc"
+        style="@style/AppTheme.ListItemSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/app_default_padding"
-        style="@style/AppTheme.ListItemSmall"/>
+        android:padding="@dimen/app_default_padding" />
 </LinearLayout>

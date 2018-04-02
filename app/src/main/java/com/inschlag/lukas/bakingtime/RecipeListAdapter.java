@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class RecipeListAdapter
             Recipe item = (Recipe) view.getTag();
             Context context = view.getContext();
             Intent intent = new Intent(context, RecipeStepListActivity.class);
-            intent.putExtra(RecipeStepDetailActivity.ARG_ITEM_ID, item.getId());
+            intent.putExtra(Constants.ARG_ITEM_ID, item.getId());
             //open
             context.startActivity(intent);
         }

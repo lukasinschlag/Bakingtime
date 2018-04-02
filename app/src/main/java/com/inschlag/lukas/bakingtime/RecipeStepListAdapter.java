@@ -31,8 +31,8 @@ public class RecipeStepListAdapter
         @Override
         public void onClick(View view) {
             Bundle arguments = new Bundle();
-            arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
-            arguments.putBoolean(RecipeStepDetailActivity.ARG_INGREDIENT, true);
+            arguments.putInt(Constants.ARG_ITEM_ID, mRecipeId);
+            arguments.putBoolean(Constants.ARG_INGREDIENT, true);
             if (mTwoPane) {
                 RecipeDetailFragment fragment = new RecipeDetailFragment();
                 fragment.setArguments(arguments);
@@ -54,8 +54,8 @@ public class RecipeStepListAdapter
         public void onClick(View view) {
             Step item = (Step) view.getTag();
             Bundle arguments = new Bundle();
-            arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
-            arguments.putInt(RecipeStepDetailActivity.ARG_STEP, item.getId());
+            arguments.putInt(Constants.ARG_ITEM_ID, mRecipeId);
+            arguments.putInt(Constants.ARG_STEP, item.getId());
             if (mTwoPane) {
                 RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
                 fragment.setArguments(arguments);
@@ -108,7 +108,7 @@ public class RecipeStepListAdapter
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.size()+1;
     }
 
     @Override

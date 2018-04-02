@@ -3,7 +3,6 @@ package com.inschlag.lukas.bakingtime;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -25,13 +23,11 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.inschlag.lukas.bakingtime.data.model.Recipe;
+import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Step;
 
 import io.realm.Realm;
@@ -56,11 +52,11 @@ public class RecipeStepDetailFragment extends Fragment {
 
         Realm realm = Realm.getDefaultInstance();
 
-        if (getArguments() != null && getArguments().containsKey(RecipeStepDetailActivity.ARG_ITEM_ID)) {
+        if (getArguments() != null && getArguments().containsKey(Constants.ARG_ITEM_ID)) {
             // Load the recipe
             mItem = realm.where(Step.class)
-                    .equalTo("recipeId", getArguments().getInt(RecipeStepDetailActivity.ARG_ITEM_ID))
-                    .equalTo("id", getArguments().getInt(RecipeStepDetailActivity.ARG_STEP))
+                    .equalTo("recipeId", getArguments().getInt(Constants.ARG_ITEM_ID))
+                    .equalTo("id", getArguments().getInt(Constants.ARG_STEP))
                     .findFirst();
 
             if(mItem == null){
@@ -88,6 +84,7 @@ public class RecipeStepDetailFragment extends Fragment {
 
             Context context = getActivity();
             if(context != null && !TextUtils.isEmpty(mItem.getVideoURL())){
+                // See: https://google.github.io/ExoPlayer/guide.html
                 // 1. Create a default TrackSelector
                 DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
                 TrackSelection.Factory videoTrackSelectionFactory =

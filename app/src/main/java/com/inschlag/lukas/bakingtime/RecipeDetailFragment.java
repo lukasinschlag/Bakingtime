@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Ingredient;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
 
@@ -23,7 +24,7 @@ import io.realm.Realm;
  * in two-pane mode (on tablets) or a {@link RecipeStepListActivity}
  * on handsets.
  *
- * It is called with the recipe id {@value RecipeStepDetailActivity#ARG_ITEM_ID}
+ * It is called with the recipe id {@value Constants#ARG_ITEM_ID}
  */
 public class RecipeDetailFragment extends Fragment {
 
@@ -37,10 +38,10 @@ public class RecipeDetailFragment extends Fragment {
 
         Realm realm = Realm.getDefaultInstance();
 
-        if (getArguments() != null && getArguments().containsKey(RecipeStepDetailActivity.ARG_ITEM_ID)) {
+        if (getArguments() != null && getArguments().containsKey(Constants.ARG_ITEM_ID)) {
             // Load the recipe
             mItem = realm.where(Recipe.class)
-                    .equalTo("id", getArguments().getInt(RecipeStepDetailActivity.ARG_ITEM_ID))
+                    .equalTo("id", getArguments().getInt(Constants.ARG_ITEM_ID))
                     .findFirst();
 
             if(mItem == null){

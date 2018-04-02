@@ -2,22 +2,17 @@ package com.inschlag.lukas.bakingtime;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import com.inschlag.lukas.bakingtime.data.Constants;
-import com.inschlag.lukas.bakingtime.data.LoadRecipes;
-import com.inschlag.lukas.bakingtime.data.model.Ingredient;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
 import com.inschlag.lukas.bakingtime.data.model.Step;
-import com.inschlag.lukas.bakingtime.utils.NetworkUtil;
 
 import java.util.List;
 
@@ -68,16 +63,18 @@ public class RecipeStepListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
 
-        int recipeId = getIntent().getIntExtra(RecipeStepDetailActivity.ARG_ITEM_ID, 0);
+        int recipeId = getIntent().getIntExtra(Constants.ARG_ITEM_ID, 0);
         Recipe recipe = realm.where(Recipe.class).equalTo("id", recipeId).findFirst();
 
         if(recipe != null){
             setupRecyclerView(recipe.getSteps(), recipeId);
-            mToolbar.setTitle(recipe.getName());
+            getSupportActionBar().setTitle(recipe.getName());
         }
     }
 
     private void setupRecyclerView(List<Step> steps, int recipeId) {
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.setAdapter(new RecipeStepListAdapter(this, steps, recipeId, mTwoPane));
     }
 

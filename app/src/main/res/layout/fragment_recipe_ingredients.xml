@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/app_default_padding"
-        android:textColor="@color/colorAccent"
+        android:textColor="?colorAccent"
         android:text="@string/ingredients"
         style="@style/AppTheme.ListItem"/>
 
