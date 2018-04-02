@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeStepDetailActivity extends AppCompatActivity {
 
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_STEP = "step";
@@ -50,7 +50,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             arguments.putInt(ARG_ITEM_ID, getIntent().getIntExtra(ARG_ITEM_ID, 0));
 
             if(getIntent().hasExtra(ARG_INGREDIENT)){
-                RecipeIngredientDetailFragment fragment = new RecipeIngredientDetailFragment();
+                RecipeDetailFragment fragment = new RecipeDetailFragment();
                 fragment.setArguments(arguments);
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.recipe_detail_container, fragment)

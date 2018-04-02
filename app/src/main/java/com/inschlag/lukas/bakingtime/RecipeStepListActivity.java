@@ -21,6 +21,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
+/**
+ * This activity shows the ingredients and steps of one recipe
+ * In tablet-mode it also shows the details for a selected step using {@link RecipeStepDetailFragment}
+ *
+ */
 public class RecipeStepListActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
@@ -31,8 +36,6 @@ public class RecipeStepListActivity extends AppCompatActivity {
     // is in tablet mode?
     private boolean mTwoPane;
 
-    private Realm realm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        realm = Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
 
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(getTitle());
@@ -56,7 +59,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
 
-        int recipeId = getIntent().getIntExtra(RecipeDetailActivity.ARG_ITEM_ID, 0);
+        int recipeId = getIntent().getIntExtra(RecipeStepDetailActivity.ARG_ITEM_ID, 0);
         Recipe recipe = realm.where(Recipe.class).equalTo("id", recipeId).findFirst();
 
         if(recipe != null){

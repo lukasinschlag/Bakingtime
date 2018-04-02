@@ -20,7 +20,7 @@ public class RecipeListAdapter
         extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder> {
 
     private final RecipeListActivity mActivity;
-    private final List<Recipe> mValues;
+    private final List<Recipe> mRecipes;
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -28,15 +28,15 @@ public class RecipeListAdapter
             Recipe item = (Recipe) view.getTag();
             Context context = view.getContext();
             Intent intent = new Intent(context, RecipeStepListActivity.class);
-            intent.putExtra(RecipeDetailActivity.ARG_ITEM_ID, item.getId());
-
+            intent.putExtra(RecipeStepDetailActivity.ARG_ITEM_ID, item.getId());
+            //open
             context.startActivity(intent);
         }
     };
 
     RecipeListAdapter(RecipeListActivity parent,
                       List<Recipe> items) {
-        mValues = items;
+        mRecipes = items;
         mActivity = parent;
     }
 
@@ -50,16 +50,16 @@ public class RecipeListAdapter
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        holder.name.setText(mValues.get(position).getName());
-        holder.servings.setText(String.format(mActivity.getResources().getString(R.string.servings), mValues.get(position).getServings()));
+        holder.name.setText(mRecipes.get(position).getName());
+        holder.servings.setText(String.format(mActivity.getResources().getString(R.string.servings), mRecipes.get(position).getServings()));
 
-        holder.itemView.setTag(mValues.get(position));
+        holder.itemView.setTag(mRecipes.get(position));
         holder.itemView.setOnClickListener(mOnClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mRecipes.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

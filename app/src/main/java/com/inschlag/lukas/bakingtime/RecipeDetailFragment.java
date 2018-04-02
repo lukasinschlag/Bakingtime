@@ -15,19 +15,20 @@ import com.inschlag.lukas.bakingtime.data.model.Recipe;
 import io.realm.Realm;
 
 /**
- * A fragment representing a single Ingredient detail screen.
+ * A fragment representing a single recipe detail screen.
+ * It shows the recipe ingredients and steps.
+ *
  * This fragment is either contained in a {@link RecipeStepListActivity}
- * in two-pane mode (on tablets) or a {@link RecipeDetailActivity}
+ * in two-pane mode (on tablets) or a {@link RecipeStepListActivity}
  * on handsets.
  *
- * It is called with the recipe id
+ * It is called with the recipe id {@value RecipeStepDetailActivity#ARG_ITEM_ID}
  */
-public class RecipeIngredientDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment {
 
     private Recipe mItem;
 
-    public RecipeIngredientDetailFragment() {
-    }
+    public RecipeDetailFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,10 +36,10 @@ public class RecipeIngredientDetailFragment extends Fragment {
 
         Realm realm = Realm.getDefaultInstance();
 
-        if (getArguments() != null && getArguments().containsKey(RecipeDetailActivity.ARG_ITEM_ID)) {
+        if (getArguments() != null && getArguments().containsKey(RecipeStepDetailActivity.ARG_ITEM_ID)) {
             // Load the recipe
             mItem = realm.where(Recipe.class)
-                    .equalTo("id", getArguments().getInt(RecipeDetailActivity.ARG_ITEM_ID))
+                    .equalTo("id", getArguments().getInt(RecipeStepDetailActivity.ARG_ITEM_ID))
                     .findFirst();
 
             if(mItem == null){

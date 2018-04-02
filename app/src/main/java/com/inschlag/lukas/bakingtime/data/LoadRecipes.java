@@ -28,7 +28,7 @@ public class LoadRecipes extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        activityReference.get().onRecipiesLoadingStarted();
+        activityReference.get().onRecipesLoadingStarted();
     }
 
     @Override

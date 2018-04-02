@@ -15,9 +15,9 @@ import com.inschlag.lukas.bakingtime.data.model.Step;
 import io.realm.Realm;
 
 /**
- * A fragment representing a single Step detail screen.
+ * A fragment representing a single Step detail screen, showing e.g. a video and step instructions
  * This fragment is either contained in a {@link RecipeStepListActivity}
- * in two-pane mode (on tablets) or a {@link RecipeDetailActivity}
+ * in two-pane mode (on tablets) or a {@link RecipeStepDetailActivity}
  * on handsets.
  */
 public class RecipeStepDetailFragment extends Fragment {
@@ -33,10 +33,10 @@ public class RecipeStepDetailFragment extends Fragment {
 
         Realm realm = Realm.getDefaultInstance();
 
-        if (getArguments() != null && getArguments().containsKey(RecipeDetailActivity.ARG_ITEM_ID)) {
+        if (getArguments() != null && getArguments().containsKey(RecipeStepDetailActivity.ARG_ITEM_ID)) {
             // Load the recipe
             mItem = realm.where(Step.class)
-                    .equalTo("id", getArguments().getInt(RecipeDetailActivity.ARG_ITEM_ID))
+                    .equalTo("id", getArguments().getInt(RecipeStepDetailActivity.ARG_ITEM_ID))
                     .findFirst();
 
             if(mItem == null){

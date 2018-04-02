@@ -43,6 +43,7 @@ public class RecipeListActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(getTitle());
 
+        // if this is a table show a GridLayout instead of a List
         if(getResources().getBoolean(R.bool.isTablet)){
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         } else {
@@ -62,7 +63,8 @@ public class RecipeListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(new RecipeListAdapter(this, recipeList));
     }
 
-    public void onRecipiesLoadingStarted(){
+    //show loading
+    public void onRecipesLoadingStarted(){
         mProgressBar.setVisibility(View.VISIBLE);
     }
 

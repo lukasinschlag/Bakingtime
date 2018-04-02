@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.inschlag.lukas.bakingtime.data.Constants;
-import com.inschlag.lukas.bakingtime.data.model.Recipe;
 import com.inschlag.lukas.bakingtime.data.model.Step;
 
 import java.util.List;
@@ -33,16 +32,16 @@ public class RecipeStepListAdapter
         public void onClick(View view) {
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putInt(RecipeDetailActivity.ARG_ITEM_ID, mRecipeId);
-                RecipeIngredientDetailFragment fragment = new RecipeIngredientDetailFragment();
+                arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
+                RecipeDetailFragment fragment = new RecipeDetailFragment();
                 fragment.setArguments(arguments);
                 mActivity.getSupportFragmentManager().beginTransaction()
                         .replace(R.id.recipe_detail_container, fragment)
                         .commit();
             } else {
                 Context context = view.getContext();
-                Intent intent = new Intent(context, RecipeDetailActivity.class);
-                intent.putExtra(RecipeDetailActivity.ARG_ITEM_ID, mRecipeId);
+                Intent intent = new Intent(context, RecipeStepDetailActivity.class);
+                intent.putExtra(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
 
                 context.startActivity(intent);
             }
@@ -56,7 +55,7 @@ public class RecipeStepListAdapter
             Step item = (Step) view.getTag();
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putInt(RecipeDetailActivity.ARG_ITEM_ID, item.getId());
+                arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, item.getId());
                 RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
                 fragment.setArguments(arguments);
                 mActivity.getSupportFragmentManager().beginTransaction()
@@ -64,8 +63,8 @@ public class RecipeStepListAdapter
                         .commit();
             } else {
                 Context context = view.getContext();
-                Intent intent = new Intent(context, RecipeDetailActivity.class);
-                intent.putExtra(RecipeDetailActivity.ARG_ITEM_ID, item.getId());
+                Intent intent = new Intent(context, RecipeStepDetailActivity.class);
+                intent.putExtra(RecipeStepDetailActivity.ARG_ITEM_ID, item.getId());
 
                 context.startActivity(intent);
             }
