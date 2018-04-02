@@ -2,6 +2,7 @@ package com.inschlag.lukas.bakingtime;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import io.realm.Realm;
 
 /**
  * A fragment representing a single recipe detail screen.
- * It shows the recipe ingredients and steps.
+ * It shows the recipe ingredients and steps. TODO ONLY INGREDIENTS????
  *
  * This fragment is either contained in a {@link RecipeStepListActivity}
  * in two-pane mode (on tablets) or a {@link RecipeStepListActivity}
@@ -56,9 +57,9 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recipe_incredient_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recipe_ingredients, container, false);
 
         if (mItem != null) {
             StringBuilder ingredients = new StringBuilder();

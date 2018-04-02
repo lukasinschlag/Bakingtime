@@ -1,10 +1,14 @@
 package com.inschlag.lukas.bakingtime;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -46,7 +50,12 @@ public class RecipeStepListActivity extends AppCompatActivity {
         Realm realm = Realm.getDefaultInstance();
 
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(getTitle());
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         if (findViewById(R.id.recipe_detail_container) != null) {
             // The detail container view will be present only in the
@@ -64,10 +73,23 @@ public class RecipeStepListActivity extends AppCompatActivity {
 
         if(recipe != null){
             setupRecyclerView(recipe.getSteps(), recipeId);
+            mToolbar.setTitle(recipe.getName());
         }
     }
 
     private void setupRecyclerView(List<Step> steps, int recipeId) {
         mRecyclerView.setAdapter(new RecipeStepListAdapter(this, steps, recipeId, mTwoPane));
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            // This ID represents the Home or Up button
+            navigateUpTo(new Intent(this, RecipeStepListActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

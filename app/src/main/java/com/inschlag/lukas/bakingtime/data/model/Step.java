@@ -5,6 +5,7 @@ import io.realm.RealmObject;
 public class Step extends RealmObject {
 
     private int id;
+    private int recipeId;
     private String shortDescription;
     private String description;
     private String videoURL;
@@ -16,6 +17,14 @@ public class Step extends RealmObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 
     public String getShortDescription() {
@@ -48,5 +57,16 @@ public class Step extends RealmObject {
 
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
+    }
+
+    @Override
+    public String toString() {
+        return "Step{" +
+                "id=" + id +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", description='" + description + '\'' +
+                ", videoURL='" + videoURL + '\'' +
+                ", thumbnailURL='" + thumbnailURL + '\'' +
+                '}';
     }
 }

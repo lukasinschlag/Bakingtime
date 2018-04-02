@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.inschlag.lukas.bakingtime.RecipeListActivity;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
+import com.inschlag.lukas.bakingtime.data.model.Step;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -47,6 +49,12 @@ public class LoadRecipes extends AsyncTask<String, Void, Boolean> {
                 public void execute(@NonNull Realm realm) {
                     try {
                         realm.createAllFromJson(Recipe.class, in);
+                        List<Recipe> recipes = realm.where(Recipe.class).findAll();
+                        for(Recipe r : recipes){
+                            for(Step s : r.getSteps()){
+                                s.setRecipeId(r.getId());
+                            }
+                        }
                     } catch (IOException e) {
                         Log.d(LoadRecipes.class.getCanonicalName(), "Error while parsing json: " + e.getMessage());
                         e.printStackTrace();

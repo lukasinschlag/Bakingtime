@@ -30,9 +30,10 @@ public class RecipeStepListAdapter
     private final View.OnClickListener mOnIngredientClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            Bundle arguments = new Bundle();
+            arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
+            arguments.putBoolean(RecipeStepDetailActivity.ARG_INGREDIENT, true);
             if (mTwoPane) {
-                Bundle arguments = new Bundle();
-                arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
                 RecipeDetailFragment fragment = new RecipeDetailFragment();
                 fragment.setArguments(arguments);
                 mActivity.getSupportFragmentManager().beginTransaction()
@@ -41,8 +42,7 @@ public class RecipeStepListAdapter
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                intent.putExtra(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
-
+                intent.putExtras(arguments);
                 context.startActivity(intent);
             }
         }
@@ -53,9 +53,10 @@ public class RecipeStepListAdapter
         @Override
         public void onClick(View view) {
             Step item = (Step) view.getTag();
+            Bundle arguments = new Bundle();
+            arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, mRecipeId);
+            arguments.putInt(RecipeStepDetailActivity.ARG_STEP, item.getId());
             if (mTwoPane) {
-                Bundle arguments = new Bundle();
-                arguments.putInt(RecipeStepDetailActivity.ARG_ITEM_ID, item.getId());
                 RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
                 fragment.setArguments(arguments);
                 mActivity.getSupportFragmentManager().beginTransaction()
@@ -64,8 +65,7 @@ public class RecipeStepListAdapter
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                intent.putExtra(RecipeStepDetailActivity.ARG_ITEM_ID, item.getId());
-
+                intent.putExtras(arguments);
                 context.startActivity(intent);
             }
         }
@@ -101,7 +101,7 @@ public class RecipeStepListAdapter
                 ((ViewHolder)holder).text.setText(String.format(mActivity.getResources().getString(R.string.stepX),
                         position, mValues.get(position-1).getShortDescription()));
                 holder.itemView.setOnClickListener(mOnStepClickListener);
-                holder.itemView.setTag(mValues.get(position));
+                holder.itemView.setTag(mValues.get(position-1));
                 break;
         }
     }

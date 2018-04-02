@@ -7,4 +7,9 @@
     <string name="servings">Servings: %d</string>
     <string name="ingredients">Ingredients</string>
     <string name="stepX">Step %d: %s</string>
+    <string name="desc">Description</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="showSteps">Show steps</string>
+    <string name="showIngredients">Show Ingredients</string>
 </resources>
