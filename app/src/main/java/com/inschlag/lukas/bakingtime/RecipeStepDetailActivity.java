@@ -1,6 +1,7 @@
 package com.inschlag.lukas.bakingtime;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -45,6 +46,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     private int mRecipeId = 0;
     private int mNumSteps = 0;
     private int mCurrentItem = -1;
+    private Recipe mRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,21 +69,21 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             Realm realm = Realm.getDefaultInstance();
             mRecipeId = getIntent().getIntExtra(Constants.ARG_ITEM_ID, 0);
 
-            Recipe recipe = realm.where(Recipe.class)
+            mRecipe = realm.where(Recipe.class)
                     .equalTo("id", mRecipeId)
                     .findFirst();
 
-            if (recipe == null) { //err: couldn't find recipe
+            if (mRecipe == null) { //err: couldn't find recipe
                 finish();
                 return;
             }
-            mNumSteps = recipe.getSteps().size();
+            mNumSteps = mRecipe.getSteps().size();
 
             CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(recipe.getName());
-                if (!TextUtils.isEmpty(recipe.getImage())) {
-                    Picasso.with(this).load(recipe.getImage()).into(mToolbarImg);
+                appBarLayout.setTitle(mRecipe.getName());
+                if (!TextUtils.isEmpty(mRecipe.getImage())) {
+                    Picasso.with(this).load(mRecipe.getImage()).into(mToolbarImg);
                 }
             }
 
@@ -115,9 +117,8 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            //to
+            Intent fullScreenVideo = new Intent(this, FullScreenVideoActivity.class);
+            fullScreenVideo.putExtra(Constants.ARG_VIDEO_URL, mRecipe.getSteps().get(mCurrentItem).getVideoURL());
         }
     }
 

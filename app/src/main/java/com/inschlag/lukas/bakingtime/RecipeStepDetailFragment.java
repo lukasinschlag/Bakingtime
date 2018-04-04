@@ -101,7 +101,7 @@ public class RecipeStepDetailFragment extends Fragment {
 
             // Produces DataSource instances through which media data is loaded.
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter);
+                    Util.getUserAgent(context, "com.inschlag.lukas.bakingtime"), bandwidthMeter);
             // This is the MediaSource representing the media to be played.
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(mItem.getVideoURL()));

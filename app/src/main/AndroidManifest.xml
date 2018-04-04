@@ -41,6 +41,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.inschlag.lukas.bakingtime.RecipeStepListActivity" />
         </activity>
+        <activity
+            android:name=".FullScreenVideoActivity"
+            android:parentActivityName=".RecipeStepDetailActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar.Translucent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.inschlag.lukas.bakingtime.RecipeStepDetailActivity" />
+        </activity>
     </application>
 
 </manifest>

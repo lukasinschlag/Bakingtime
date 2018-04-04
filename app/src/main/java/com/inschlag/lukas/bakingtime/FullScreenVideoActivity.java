@@ -1,12 +1,8 @@
 package com.inschlag.lukas.bakingtime;
 
-import android.app.Dialog;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
@@ -16,14 +12,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.inschlag.lukas.bakingtime.data.Constants;
-import com.inschlag.lukas.bakingtime.data.model.Recipe;
-import com.squareup.picasso.Picasso;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public class FullScreenVideoActivity extends AppCompatActivity {
 
@@ -35,7 +37,29 @@ public class FullScreenVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_full_screen_video);
 
         if (getIntent().hasExtra(Constants.ARG_VIDEO_URL)) {
+            // See: https://google.github.io/ExoPlayer/guide.html
+            // 1. Create a default TrackSelector
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelection.Factory videoTrackSelectionFactory =
+                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+            TrackSelector trackSelector =
+                    new DefaultTrackSelector(videoTrackSelectionFactory);
 
+            // 2. Create the player
+            player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+
+            PlayerView mPlayerView = findViewById(R.id.videoPlayer);
+            mPlayerView.requestFocus();
+            mPlayerView.setPlayer(player);
+
+            // Produces DataSource instances through which media data is loaded.
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
+                    Util.getUserAgent(this, "com.inschlag.lukas.bakingtime"), bandwidthMeter);
+            // This is the MediaSource representing the media to be played.
+            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(Uri.parse(getIntent().getStringExtra(Constants.ARG_VIDEO_URL)));
+            // Prepare the player with the source.
+            player.prepare(videoSource);
         }
     }
 
@@ -43,8 +67,16 @@ public class FullScreenVideoActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             finish();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (player != null) {
+            player.release();
         }
     }
 
