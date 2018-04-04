@@ -47,10 +47,12 @@
         android:id="@+id/recipe_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/list_inner_padding"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <RelativeLayout
         android:background="@color/barBackground"
+        android:id="@+id/stepNavBar"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

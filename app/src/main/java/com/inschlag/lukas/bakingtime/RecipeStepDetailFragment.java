@@ -1,6 +1,7 @@
 package com.inschlag.lukas.bakingtime;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -59,7 +60,7 @@ public class RecipeStepDetailFragment extends Fragment {
                     .equalTo("id", getArguments().getInt(Constants.ARG_STEP))
                     .findFirst();
 
-            if(mItem == null){
+            if (mItem == null) {
                 //err: couldn't find step
                 return;
             }
@@ -79,35 +80,33 @@ public class RecipeStepDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe_step_detail, container, false);
 
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.stepDesc)).setText(mItem.getDescription());
+        ((TextView) rootView.findViewById(R.id.stepDesc)).setText(mItem.getDescription());
 
-            Context context = getActivity();
-            if(context != null && !TextUtils.isEmpty(mItem.getVideoURL())){
-                // See: https://google.github.io/ExoPlayer/guide.html
-                // 1. Create a default TrackSelector
-                DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-                TrackSelection.Factory videoTrackSelectionFactory =
-                        new AdaptiveTrackSelection.Factory(bandwidthMeter);
-                TrackSelector trackSelector =
-                        new DefaultTrackSelector(videoTrackSelectionFactory);
+        Context context = getActivity();
+        if (context != null && !TextUtils.isEmpty(mItem.getVideoURL())) {
+            // See: https://google.github.io/ExoPlayer/guide.html
+            // 1. Create a default TrackSelector
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelection.Factory videoTrackSelectionFactory =
+                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+            TrackSelector trackSelector =
+                    new DefaultTrackSelector(videoTrackSelectionFactory);
 
-                // 2. Create the player
-                player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+            // 2. Create the player
+            player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
-                PlayerView playerView = rootView.findViewById(R.id.videoPlayer);
-                playerView.requestFocus();
-                playerView.setPlayer(player);
+            PlayerView mPlayerView = rootView.findViewById(R.id.videoPlayer);
+            mPlayerView.requestFocus();
+            mPlayerView.setPlayer(player);
 
-                // Produces DataSource instances through which media data is loaded.
-                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                        Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter);
-                // This is the MediaSource representing the media to be played.
-                MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(mItem.getVideoURL()));
-                // Prepare the player with the source.
-                player.prepare(videoSource);
-            }
+            // Produces DataSource instances through which media data is loaded.
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
+                    Util.getUserAgent(context, "yourApplicationName"), bandwidthMeter);
+            // This is the MediaSource representing the media to be played.
+            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(Uri.parse(mItem.getVideoURL()));
+            // Prepare the player with the source.
+            player.prepare(videoSource);
         }
 
         return rootView;
@@ -116,7 +115,7 @@ public class RecipeStepDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(player != null){
+        if (player != null) {
             player.release();
         }
     }

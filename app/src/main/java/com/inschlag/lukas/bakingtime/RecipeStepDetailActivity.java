@@ -1,5 +1,7 @@
 package com.inschlag.lukas.bakingtime;
 
+import android.app.Dialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -69,17 +71,16 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
                     .equalTo("id", mRecipeId)
                     .findFirst();
 
-            if(recipe == null){
-                //err: couldn't find recipe
+            if (recipe == null) { //err: couldn't find recipe
+                finish();
                 return;
             }
             mNumSteps = recipe.getSteps().size();
-            Log.d("StepDetail", "numOfSteps: " + mNumSteps);
 
             CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(recipe.getName());
-                if(!TextUtils.isEmpty(recipe.getImage())){
+                if (!TextUtils.isEmpty(recipe.getImage())) {
                     Picasso.with(this).load(recipe.getImage()).into(mToolbarImg);
                 }
             }
@@ -87,18 +88,36 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             // it gets either the recipe id (if showing the ingredients) or the step id (showing a step)
-            if(getIntent().hasExtra(Constants.ARG_INGREDIENT)){
+            if (getIntent().hasExtra(Constants.ARG_INGREDIENT)) {
                 showIngredients();
-            } else if(getIntent().hasExtra(Constants.ARG_STEP)) {
+            } else if (getIntent().hasExtra(Constants.ARG_STEP)) {
                 showStep(getIntent().getIntExtra(Constants.ARG_STEP, 0));
             }
-            setNavButtons(mCurrentItem);
         } else { //restore the state on orientation change
             Log.d("StepDetail", "restoreState");
             mRecipeId = savedInstanceState.getInt(Constants.ARG_ITEM_ID);
             mNumSteps = savedInstanceState.getInt(ARG_STEPS);
             mCurrentItem = savedInstanceState.getInt(ARG_CURRENT);
             mFragment = getSupportFragmentManager().findFragmentByTag(ARG_FRAGMENT_TAG);
+            if (mCurrentItem == -1) { //ingredients
+                showIngredients();
+            } else {
+                showStep(mCurrentItem);
+            }
+        }
+
+        // set the navigation buttons depending on the current step
+        setNavButtons(mCurrentItem);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            //to
         }
     }
 
@@ -110,47 +129,52 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    /*
+     * ClickListener for when the left ('previous') button has been pressed
+     */
     private final View.OnClickListener mOnPrevClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            setNavButtons(mCurrentItem-1);
-            if(mCurrentItem == 0){ //show Ingredients
+            setNavButtons(mCurrentItem - 1);
+            if (mCurrentItem == 0) { //show Ingredients
                 showIngredients();
             } else {
-                showStep(mCurrentItem-1);
+                showStep(mCurrentItem - 1);
             }
         }
     };
 
+    /*
+     * ClickListener for when the right ('next') button has been pressed
+     */
     private final View.OnClickListener mOnNextClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            setNavButtons(mCurrentItem+1);
-            showStep(mCurrentItem+1);
+            setNavButtons(mCurrentItem + 1);
+            showStep(mCurrentItem + 1);
         }
     };
 
-    private void setNavButtons(int id){
+    private void setNavButtons(int id) {
         mPrevBtn.setText(getResources().getString(R.string.previous));
         mNextBtn.setText(getResources().getString(R.string.next));
         mPrevBtn.setVisibility(View.VISIBLE);
-        if(id > 0){
-            if(id == (mNumSteps -1)){ //last step
+        if (id > 0) {
+            if (id == (mNumSteps - 1)) { //last step
                 Log.d("StepDetail", "lastStep");
                 mNextBtn.setEnabled(false);
             } else { //a step in the middle
                 mNextBtn.setEnabled(true);
             }
-        } else if (id == 0){ //first step
+        } else if (id == 0) { //first step
             mPrevBtn.setText(getResources().getString(R.string.showIngredients));
-        } else {
-            // ingredients screen
+        } else { // ingredients screen
             mPrevBtn.setVisibility(View.GONE);
             mNextBtn.setText(getResources().getString(R.string.showSteps));
         }
     }
 
-    private void showIngredients(){
+    private void showIngredients() {
         Log.d(getClass().getCanonicalName(), "Show ingredients fragment");
 
         mCurrentItem = -1;
@@ -161,7 +185,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         setFragment(fragment);
     }
 
-    private void showStep(int id){
+    private void showStep(int id) {
         Log.d(getClass().getCanonicalName(), "Show step fragment");
 
         mCurrentItem = id;
@@ -173,8 +197,8 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         setFragment(fragment);
     }
 
-    private void setFragment(Fragment fragment){
-        if(mFragment == null){
+    private void setFragment(Fragment fragment) {
+        if (mFragment == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.recipe_detail_container, fragment, ARG_FRAGMENT_TAG)
                     .commit();

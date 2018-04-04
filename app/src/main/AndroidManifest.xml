@@ -35,6 +35,7 @@
             android:name=".RecipeStepDetailActivity"
             android:label="@string/title_recipe_detail"
             android:parentActivityName=".RecipeStepListActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar.Translucent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

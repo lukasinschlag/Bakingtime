@@ -8,4 +8,5 @@ public final class Constants {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_STEP = "step";
     public static final String ARG_INGREDIENT = "ingredient";
+    public static final String ARG_VIDEO_URL = "video_url";
 }
