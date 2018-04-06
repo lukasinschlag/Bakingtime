@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -60,6 +61,8 @@ public class FullScreenVideoActivity extends AppCompatActivity {
                     .createMediaSource(Uri.parse(getIntent().getStringExtra(Constants.ARG_VIDEO_URL)));
             // Prepare the player with the source.
             player.prepare(videoSource);
+        } else {
+            finish();
         }
     }
 

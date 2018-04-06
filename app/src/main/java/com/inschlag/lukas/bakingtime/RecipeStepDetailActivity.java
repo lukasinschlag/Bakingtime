@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
+import com.inschlag.lukas.bakingtime.data.model.Step;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -116,9 +117,16 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Intent fullScreenVideo = new Intent(this, FullScreenVideoActivity.class);
-            fullScreenVideo.putExtra(Constants.ARG_VIDEO_URL, mRecipe.getSteps().get(mCurrentItem).getVideoURL());
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Step step = mRecipe.getSteps().get(mCurrentItem);
+            if (step != null) {
+                String url = step.getVideoURL();
+                if (!TextUtils.isEmpty(url) && mCurrentItem != -1) {
+                    Intent fullScreenVideo = new Intent(this, FullScreenVideoActivity.class);
+                    fullScreenVideo.putExtra(Constants.ARG_VIDEO_URL, url);
+                    startActivity(fullScreenVideo);
+                }
+            }
         }
     }
 

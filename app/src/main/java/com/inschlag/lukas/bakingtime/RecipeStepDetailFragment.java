@@ -41,6 +41,7 @@ import io.realm.Realm;
  */
 public class RecipeStepDetailFragment extends Fragment {
 
+    private int mRecipeId, mStepId;
     private Step mItem;
     private SimpleExoPlayer player;
 
@@ -51,14 +52,12 @@ public class RecipeStepDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Realm realm = Realm.getDefaultInstance();
-
         if (getArguments() != null && getArguments().containsKey(Constants.ARG_ITEM_ID)) {
-            // Load the recipe
-            mItem = realm.where(Step.class)
-                    .equalTo("recipeId", getArguments().getInt(Constants.ARG_ITEM_ID))
-                    .equalTo("id", getArguments().getInt(Constants.ARG_STEP))
-                    .findFirst();
+            mRecipeId = getArguments().getInt(Constants.ARG_ITEM_ID);
+            mStepId = getArguments().getInt(Constants.ARG_STEP);
+
+            // Load the recipe step
+            mItem = loadStep();
 
             if (mItem == null) {
                 //err: couldn't find step
@@ -79,6 +78,14 @@ public class RecipeStepDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe_step_detail, container, false);
+
+        if(mItem == null && savedInstanceState != null){
+            mRecipeId = savedInstanceState.getInt(Constants.ARG_ITEM_ID);
+            mStepId = savedInstanceState.getInt(Constants.ARG_STEP);
+        } else {
+            getActivity().finish();
+            return rootView;
+        }
 
         ((TextView) rootView.findViewById(R.id.stepDesc)).setText(mItem.getDescription());
 
@@ -110,6 +117,21 @@ public class RecipeStepDetailFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt(Constants.ARG_ITEM_ID, mRecipeId);
+        outState.putInt(Constants.ARG_STEP, mStepId);
+        super.onSaveInstanceState(outState);
+    }
+
+    private Step loadStep(){
+        Realm realm = Realm.getDefaultInstance();
+        return realm.where(Step.class)
+                .equalTo("recipeId", mRecipeId)
+                .equalTo("id", mStepId)
+                .findFirst();
     }
 
     @Override
