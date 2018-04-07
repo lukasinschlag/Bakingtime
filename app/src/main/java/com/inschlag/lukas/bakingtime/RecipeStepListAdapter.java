@@ -2,9 +2,11 @@ package com.inschlag.lukas.bakingtime;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,8 +66,16 @@ public class RecipeStepListAdapter
                         .commit();
             } else {
                 Context context = view.getContext();
-                Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                intent.putExtras(arguments);
+                Intent intent;
+                // is phone in landscape - if, show Fullscreen video
+                if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                        && !TextUtils.isEmpty(item.getVideoURL())){
+                    intent = new Intent(context, FullScreenVideoActivity.class);
+                    intent.putExtra(Constants.ARG_VIDEO_URL, item.getVideoURL());
+                } else {
+                    intent = new Intent(context, RecipeStepDetailActivity.class);
+                    intent.putExtras(arguments);
+                }
                 context.startActivity(intent);
             }
         }

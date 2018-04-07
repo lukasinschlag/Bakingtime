@@ -12,4 +12,5 @@
     <string name="next">Next</string>
     <string name="showSteps">Show steps</string>
     <string name="showIngredients">Show Ingredients</string>
+    <string name="stepErr">Step details could not be loaded!</string>
 </resources>

@@ -48,6 +48,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     private int mNumSteps = 0;
     private int mCurrentItem = -1;
     private Recipe mRecipe;
+    private boolean isLandscape = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,10 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            isLandscape = true;
         }
 
         mPrevBtn.setOnClickListener(mOnPrevClickListener);
@@ -118,15 +123,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
 
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Step step = mRecipe.getSteps().get(mCurrentItem);
-            if (step != null) {
-                String url = step.getVideoURL();
-                if (!TextUtils.isEmpty(url) && mCurrentItem != -1) {
-                    Intent fullScreenVideo = new Intent(this, FullScreenVideoActivity.class);
-                    fullScreenVideo.putExtra(Constants.ARG_VIDEO_URL, url);
-                    startActivity(fullScreenVideo);
-                }
-            }
+            showStepFullScreen();
         }
     }
 
@@ -198,14 +195,32 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         Log.d(getClass().getCanonicalName(), "Show step fragment");
 
         mCurrentItem = id;
-        Bundle arguments = new Bundle();
-        arguments.putInt(Constants.ARG_ITEM_ID, mRecipeId);
-        arguments.putInt(Constants.ARG_STEP, mCurrentItem);
-        RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-        fragment.setArguments(arguments);
-        setFragment(fragment);
+        if(isLandscape){
+            showStepFullScreen();
+        } else {
+            Bundle arguments = new Bundle();
+            arguments.putInt(Constants.ARG_ITEM_ID, mRecipeId);
+            arguments.putInt(Constants.ARG_STEP, mCurrentItem);
+            RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
+            fragment.setArguments(arguments);
+            setFragment(fragment);
+        }
     }
 
+    private void showStepFullScreen(){
+        Step step = mRecipe.getSteps().get(mCurrentItem);
+        if (step != null) {
+            String url = step.getVideoURL();
+            if (!TextUtils.isEmpty(url) && mCurrentItem != -1) {
+                setNavButtons(-1);
+                Intent fullScreenVideo = new Intent(this, FullScreenVideoActivity.class);
+                fullScreenVideo.putExtra(Constants.ARG_VIDEO_URL, url);
+                startActivity(fullScreenVideo);
+            }
+        }
+    }
+
+    // show the detail fragment
     private void setFragment(Fragment fragment) {
         if (mFragment == null) {
             getSupportFragmentManager().beginTransaction()
