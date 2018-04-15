@@ -13,4 +13,9 @@
     <string name="showSteps">Show steps</string>
     <string name="showIngredients">Show Ingredients</string>
     <string name="stepErr">Step details could not be loaded!</string>
+    <string name="appwidget_text">Ingredients:\n</string>
+    <string name="appwidget_text_line">%s: %f %s\n</string>
+    <string name="show_widget">Show in widget</string>
+    <string name="no_widget">No recipe selected for the widget yet.</string>
+    <string name="add_widget">Add widget</string>
 </resources>

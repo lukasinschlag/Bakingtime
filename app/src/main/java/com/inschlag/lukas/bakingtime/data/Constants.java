@@ -9,4 +9,5 @@ public final class Constants {
     public static final String ARG_STEP = "step";
     public static final String ARG_INGREDIENT = "ingredient";
     public static final String ARG_VIDEO_URL = "video_url";
+    public static final String WIDGET_RECIPE = "widget_recipe_id";
 }

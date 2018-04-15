@@ -17,8 +17,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.inschlag.lukas.bakingtime.R;
-import com.inschlag.lukas.bakingtime.data.Constants;
 
 /**
  * Reference:

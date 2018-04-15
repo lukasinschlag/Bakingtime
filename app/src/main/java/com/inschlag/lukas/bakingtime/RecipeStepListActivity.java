@@ -1,13 +1,17 @@
 package com.inschlag.lukas.bakingtime;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.inschlag.lukas.bakingtime.data.Constants;
@@ -34,6 +38,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
 
     // is in tablet mode?
     private boolean mTwoPane;
+    private int mRecipeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +68,33 @@ public class RecipeStepListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
 
-        int recipeId = getIntent().getIntExtra(Constants.ARG_ITEM_ID, 0);
-        Recipe recipe = realm.where(Recipe.class).equalTo("id", recipeId).findFirst();
+        mRecipeId = getIntent().getIntExtra(Constants.ARG_ITEM_ID, 0);
+        Recipe recipe = realm.where(Recipe.class).equalTo("id", mRecipeId).findFirst();
 
         if(recipe != null){
-            setupRecyclerView(recipe.getSteps(), recipeId);
+            setupRecyclerView(recipe.getSteps());
             getSupportActionBar().setTitle(recipe.getName());
         }
     }
 
-    private void setupRecyclerView(List<Step> steps, int recipeId) {
+    private void setupRecyclerView(List<Step> steps) {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
-        mRecyclerView.setAdapter(new RecipeStepListAdapter(this, steps, recipeId, mTwoPane));
+        mRecyclerView.setAdapter(new RecipeStepListAdapter(this, steps, mRecipeId, mTwoPane));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_recipe, menu);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if(mRecipeId == sp.getInt(Constants.WIDGET_RECIPE, -1)){
+            menu.getItem(0).setChecked(true);
+        }
+
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,6 +103,16 @@ public class RecipeStepListActivity extends AppCompatActivity {
             // This ID represents the Home or Up button
             navigateUpTo(new Intent(this, RecipeStepListActivity.class));
             return true;
+        } else if(id == R.id.menu_recipe){
+            int rId = -1;
+            if(item.isChecked()){
+                item.setChecked(false);
+            } else {
+                rId = mRecipeId;
+                item.setChecked(true);
+            }
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            sp.edit().putInt(Constants.WIDGET_RECIPE, rId).apply();
         }
         return super.onOptionsItemSelected(item);
     }

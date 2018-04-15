@@ -66,11 +66,12 @@ public class RecipeListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(new RecipeListAdapter(this, recipeList));
     }
 
-    //show loading
+    //show loading indicator
     public void onRecipesLoadingStarted(){
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
+    // recipes loaded: hide loading indicator and update list
     public void onRecipesLoaded(){
         mProgressBar.setVisibility(View.GONE);
         setupRecyclerView(realm.where(Recipe.class).findAll());
