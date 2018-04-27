@@ -1,4 +1,4 @@
-package com.inschlag.lukas.bakingtime;
+package com.inschlag.lukas.bakingtime.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.widget.ArrayAdapter;
 import android.widget.RemoteViews;
 
+import com.inschlag.lukas.bakingtime.R;
+import com.inschlag.lukas.bakingtime.RecipeStepListActivity;
 import com.inschlag.lukas.bakingtime.data.Constants;
-import com.inschlag.lukas.bakingtime.data.model.Ingredient;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
+
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -37,13 +41,11 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
                 return;
             }
 
-            String line = context.getString(R.string.appwidget_text_line);
-            StringBuilder widgetText = new StringBuilder(context.getString(R.string.appwidget_text));
-            for (Ingredient i : recipe.getIngredients()) {
-                widgetText.append(String.format(line, i.getIngredient(), i.getQuantity(), i.getMeasure()));
-            }
             views.setTextViewText(R.id.appwidget_title, recipe.getName());
-            views.setTextViewText(R.id.appwidget_text, widgetText.toString());
+
+            Intent listIntent = new Intent(context, WidgetRemoteViewsService.class);
+            listIntent.putExtra(Constants.WIDGET_RECIPE, id);
+            views.setRemoteAdapter(R.id.appwidget_list, listIntent);
 
             Intent intent = new Intent(context, RecipeStepListActivity.class);
             intent.putExtra(Constants.ARG_ITEM_ID, id);
@@ -73,6 +75,18 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    private class IngredientArrayAdapter extends ArrayAdapter<String> {
+
+        public IngredientArrayAdapter(Context context, int layoutId, int textViewId, List<String> objects) {
+            super(context, layoutId, textViewId, objects);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
     }
 }
 

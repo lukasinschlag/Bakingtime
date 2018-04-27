@@ -1,4 +1,4 @@
-package com.inschlag.lukas.bakingtime;
+package com.inschlag.lukas.bakingtime.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inschlag.lukas.bakingtime.FullScreenVideoActivity;
+import com.inschlag.lukas.bakingtime.R;
+import com.inschlag.lukas.bakingtime.RecipeDetailFragment;
+import com.inschlag.lukas.bakingtime.RecipeStepDetailActivity;
+import com.inschlag.lukas.bakingtime.RecipeStepDetailFragment;
+import com.inschlag.lukas.bakingtime.RecipeStepListActivity;
 import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Step;
 
@@ -81,10 +87,10 @@ public class RecipeStepListAdapter
         }
     };
 
-    RecipeStepListAdapter(RecipeStepListActivity parent,
-                          List<Step> items,
-                          int recipeId,
-                          boolean twoPane) {
+    public RecipeStepListAdapter(RecipeStepListActivity parent,
+                                 List<Step> items,
+                                 int recipeId,
+                                 boolean twoPane) {
         mValues = items;
         mRecipeId = recipeId;
         mActivity = parent;

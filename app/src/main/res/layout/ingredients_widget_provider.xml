@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/appwidget"
-    android:background="#09C"
+    android:background="@color/primaryColor"
     android:padding="@dimen/widget_margin">
 
     <TextView
@@ -15,15 +15,10 @@
         android:textColor="#ffffff"
         android:textSize="18sp"
         android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/appwidget_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/appwidget_title"
-            android:layout_margin="8dp"
-            android:contentDescription="@string/appwidget_text"
-            android:text="@string/appwidget_text"
-            android:textColor="#ffffff"
-            android:textSize="12sp" />
+    
+    <ListView
+        android:layout_below="@id/appwidget_title"
+        android:id="@+id/appwidget_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

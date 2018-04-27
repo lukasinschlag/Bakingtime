@@ -1,4 +1,4 @@
-package com.inschlag.lukas.bakingtime;
+package com.inschlag.lukas.bakingtime.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inschlag.lukas.bakingtime.R;
+import com.inschlag.lukas.bakingtime.RecipeListActivity;
+import com.inschlag.lukas.bakingtime.RecipeStepListActivity;
 import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
 
@@ -35,8 +38,8 @@ public class RecipeListAdapter
         }
     };
 
-    RecipeListAdapter(RecipeListActivity parent,
-                      List<Recipe> items) {
+    public RecipeListAdapter(RecipeListActivity parent,
+                             List<Recipe> items) {
         mRecipes = items;
         mActivity = parent;
     }
