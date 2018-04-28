@@ -18,10 +18,10 @@ import io.realm.Realm;
 
 /**
  * A fragment representing a single recipe detail screen.
- * It shows the recipe ingredients and steps. TODO ONLY INGREDIENTS????
+ * It shows the recipe ingredients.
  *
- * This fragment is either contained in a {@link RecipeStepListActivity}
- * in two-pane mode (on tablets) or a {@link RecipeStepListActivity}
+ * This fragment is either contained in a {@link RecipeListActivity}
+ * in two-pane mode (on tablets) or a {@link RecipeStepDetailActivity}
  * on handsets.
  *
  * It is called with the recipe id {@value Constants#ARG_ITEM_ID}
@@ -50,9 +50,11 @@ public class RecipeDetailFragment extends Fragment {
             }
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.getName());
+            if(activity != null) {
+                CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle(mItem.getName());
+                }
             }
         }
     }

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.ArrayAdapter;
 import android.widget.RemoteViews;
 
 import com.inschlag.lukas.bakingtime.R;
@@ -20,7 +19,7 @@ import java.util.List;
 import io.realm.Realm;
 
 /**
- * Implementation of App Widget functionality.
+ * Implementation of Bakingtime App Widget functionality.
  */
 public class IngredientsWidgetProvider extends AppWidgetProvider {
 
@@ -68,25 +67,9 @@ public class IngredientsWidgetProvider extends AppWidgetProvider {
     }
 
     @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
+    public void onEnabled(Context context) {}
 
     @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-    }
-
-    private class IngredientArrayAdapter extends ArrayAdapter<String> {
-
-        public IngredientArrayAdapter(Context context, int layoutId, int textViewId, List<String> objects) {
-            super(context, layoutId, textViewId, objects);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-    }
+    public void onDisabled(Context context) {}
 }
 

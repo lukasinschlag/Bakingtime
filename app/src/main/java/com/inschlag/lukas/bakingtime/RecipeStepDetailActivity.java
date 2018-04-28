@@ -1,6 +1,5 @@
 package com.inschlag.lukas.bakingtime;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -102,7 +101,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
                 showStep(getIntent().getIntExtra(Constants.ARG_STEP, 0));
             }
         } else { //restore the state on orientation change
-            Log.d("StepDetail", "restoreState");
             mRecipeId = savedInstanceState.getInt(Constants.ARG_ITEM_ID);
             mNumSteps = savedInstanceState.getInt(ARG_STEPS);
             mCurrentItem = savedInstanceState.getInt(ARG_CURRENT);
@@ -165,6 +163,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         mPrevBtn.setText(getResources().getString(R.string.previous));
         mNextBtn.setText(getResources().getString(R.string.next));
         mPrevBtn.setVisibility(View.VISIBLE);
+        Log.d("STEP DETAIL", id + " == " + mNumSteps);
         if (id > 0) {
             if (id == (mNumSteps - 1)) { //last step
                 Log.d("StepDetail", "lastStep");
@@ -181,8 +180,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     }
 
     private void showIngredients() {
-        Log.d(getClass().getCanonicalName(), "Show ingredients fragment");
-
         mCurrentItem = -1;
         Bundle arguments = new Bundle();
         arguments.putInt(Constants.ARG_ITEM_ID, mRecipeId);
@@ -192,8 +189,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     }
 
     private void showStep(int id) {
-        Log.d(getClass().getCanonicalName(), "Show step fragment");
-
         mCurrentItem = id;
         if(isLandscape){
             showStepFullScreen();

@@ -1,5 +1,7 @@
 package com.inschlag.lukas.bakingtime;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.inschlag.lukas.bakingtime.adapter.RecipeStepListAdapter;
 import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
 import com.inschlag.lukas.bakingtime.data.model.Step;
+import com.inschlag.lukas.bakingtime.widget.IngredientsWidgetProvider;
 
 import java.util.List;
 
@@ -28,7 +31,6 @@ import io.realm.Realm;
 /**
  * This activity shows the ingredients and steps of one recipe
  * In tablet-mode it also shows the details for a selected step using {@link RecipeStepDetailFragment}
- *
  */
 public class RecipeStepListActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class RecipeStepListActivity extends AppCompatActivity {
     // is in tablet mode?
     private boolean mTwoPane;
     private int mRecipeId;
+    private Intent mWidgetIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,12 @@ public class RecipeStepListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Realm realm = Realm.getDefaultInstance();
+
+        mWidgetIntent = new Intent(this, IngredientsWidgetProvider.class);
+        mWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), IngredientsWidgetProvider.class));
+        mWidgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 
         setSupportActionBar(mToolbar);
 
@@ -101,7 +110,6 @@ public class RecipeStepListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // This ID represents the Home or Up button
             navigateUpTo(new Intent(this, RecipeStepListActivity.class));
             return true;
         } else if(id == R.id.menu_recipe){
@@ -114,6 +122,8 @@ public class RecipeStepListActivity extends AppCompatActivity {
             }
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
             sp.edit().putInt(Constants.WIDGET_RECIPE, rId).apply();
+
+            sendBroadcast(mWidgetIntent);
         }
         return super.onOptionsItemSelected(item);
     }

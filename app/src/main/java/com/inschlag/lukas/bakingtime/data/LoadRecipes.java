@@ -24,7 +24,7 @@ public class LoadRecipes extends AsyncTask<String, Void, Boolean> {
     private WeakReference<RecipeListActivity> activityReference;
 
     public LoadRecipes(RecipeListActivity activity){
-        this.activityReference = new WeakReference<RecipeListActivity>(activity);
+        this.activityReference = new WeakReference<>(activity);
     }
 
     @Override
@@ -51,8 +51,11 @@ public class LoadRecipes extends AsyncTask<String, Void, Boolean> {
                         realm.createAllFromJson(Recipe.class, in);
                         List<Recipe> recipes = realm.where(Recipe.class).findAll();
                         for(Recipe r : recipes){
+                            int sid = 0;
                             for(Step s : r.getSteps()){
                                 s.setRecipeId(r.getId());
+                                s.setId(sid);
+                                sid++;
                             }
                         }
                     } catch (IOException e) {

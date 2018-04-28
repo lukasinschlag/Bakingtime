@@ -22,19 +22,16 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     private List<String> mStringList = new ArrayList<>();
     private int mRecipeId = 0;
 
-    public WidgetRemoteViewsFactory(Context applicationContext, Intent intent) {
+    WidgetRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
         mRecipeId = intent.getIntExtra(Constants.WIDGET_RECIPE, 0);
     }
 
     @Override
-    public void onCreate() {
-
-    }
+    public void onCreate() {}
 
     @Override
     public void onDataSetChanged() {
-
         Realm realm = Realm.getDefaultInstance();
         Recipe recipe = realm.where(Recipe.class).equalTo("id", mRecipeId).findFirst();
 
@@ -48,14 +45,10 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         }
 
         realm.close();
-        //final long identityToken = Binder.clearCallingIdentity();
-        //Binder.restoreCallingIdentity(identityToken);
     }
 
     @Override
-    public void onDestroy() {
-
-    }
+    public void onDestroy() {}
 
     @Override
     public int getCount() {
@@ -67,7 +60,6 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         if (position == AdapterView.INVALID_POSITION || mStringList.isEmpty()) {
             return null;
         }
-
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.ingredients_widget_item);
         rv.setTextViewText(R.id.appwidget_text, mStringList.get(position));
 

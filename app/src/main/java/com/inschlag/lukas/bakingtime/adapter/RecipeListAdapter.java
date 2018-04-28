@@ -25,6 +25,7 @@ public class RecipeListAdapter
 
     private final RecipeListActivity mActivity;
     private final List<Recipe> mRecipes;
+    private int mLayoutResId = R.layout.recipe_list_content;
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -33,22 +34,24 @@ public class RecipeListAdapter
             Context context = view.getContext();
             Intent intent = new Intent(context, RecipeStepListActivity.class);
             intent.putExtra(Constants.ARG_ITEM_ID, item.getId());
-            //open
             context.startActivity(intent);
         }
     };
 
-    public RecipeListAdapter(RecipeListActivity parent,
-                             List<Recipe> items) {
+    public RecipeListAdapter(RecipeListActivity parent, List<Recipe> items) {
         mRecipes = items;
         mActivity = parent;
+
+        if(mActivity.getResources().getBoolean(R.bool.isTablet)){
+            mLayoutResId = R.layout.recipe_list_content_card;
+        }
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recipe_list_content, parent, false);
+                .inflate(mLayoutResId, parent, false);
         return new ViewHolder(view);
     }
 

@@ -1,7 +1,6 @@
 package com.inschlag.lukas.bakingtime;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -16,19 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Step;
 import com.inschlag.lukas.bakingtime.utils.ExoPlayerUtil;
@@ -60,15 +47,16 @@ public class RecipeStepDetailFragment extends Fragment {
             mItem = loadStep();
 
             if (mItem == null) {
-                //err: couldn't find step
-                showErr();
+                showErr(); //err: couldn't find step
                 return;
             }
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.getShortDescription());
+            if(activity != null) {
+                CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle(mItem.getShortDescription());
+                }
             }
         } else {
             showErr();
@@ -83,6 +71,7 @@ public class RecipeStepDetailFragment extends Fragment {
         if(mItem == null && savedInstanceState != null){
             mRecipeId = savedInstanceState.getInt(Constants.ARG_ITEM_ID);
             mStepId = savedInstanceState.getInt(Constants.ARG_STEP);
+            mItem = loadStep();
         }
 
         ((TextView) rootView.findViewById(R.id.stepDesc)).setText(mItem.getDescription());
