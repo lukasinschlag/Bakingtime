@@ -163,7 +163,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         mPrevBtn.setText(getResources().getString(R.string.previous));
         mNextBtn.setText(getResources().getString(R.string.next));
         mPrevBtn.setVisibility(View.VISIBLE);
-        Log.d("STEP DETAIL", id + " == " + mNumSteps);
         if (id > 0) {
             if (id == (mNumSteps - 1)) { //last step
                 Log.d("StepDetail", "lastStep");
