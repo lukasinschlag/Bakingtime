@@ -33,8 +33,8 @@ import io.realm.Realm;
 public class RecipeStepDetailFragment extends Fragment {
 
     private int mRecipeId, mStepId;
-    private long mCurrentVidPos;
-    private boolean mPlayVidWhenReady;
+    private long mCurrentVidPos = 0;
+    private boolean mPlayVidWhenReady = false;
     private Step mItem;
     private PlayerView player;
     public RecipeStepDetailFragment() {}
@@ -108,9 +108,10 @@ public class RecipeStepDetailFragment extends Fragment {
         super.onPause();
 
         SimpleExoPlayer player = ExoPlayerUtil.getInstance().getPlayer();
-        mCurrentVidPos = player.getCurrentPosition();
-        mPlayVidWhenReady = player.getPlayWhenReady();
-
+        if(player != null) {
+            mCurrentVidPos = player.getCurrentPosition();
+            mPlayVidWhenReady = player.getPlayWhenReady();
+        }
         if (Util.SDK_INT <= 23) {
             ExoPlayerUtil.getInstance().releaseVideoPlayer();
         }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -21,8 +22,8 @@ public class FullScreenVideoActivity extends AppCompatActivity {
 
     @BindView(R.id.videoPlayer)
     PlayerView playerView;
-    private long mCurrentVidPos;
-    private boolean mPlayVidWhenReady;
+    private long mCurrentVidPos = 0;
+    private boolean mPlayVidWhenReady = false;
     private String mVidUrl;
 
     @Override
@@ -51,7 +52,7 @@ public class FullScreenVideoActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if ((Util.SDK_INT <= 23 || ExoPlayerUtil.getInstance().getPlayer() == null)) {
+        if ((Util.SDK_INT <= 23 || ExoPlayerUtil.getFullScreenInstance().getPlayer() == null)) {
             initializePlayer();
         }
     }
@@ -78,12 +79,14 @@ public class FullScreenVideoActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
 
-        SimpleExoPlayer player = ExoPlayerUtil.getInstance().getPlayer();
-        mCurrentVidPos = player.getCurrentPosition();
-        mPlayVidWhenReady = player.getPlayWhenReady();
+        SimpleExoPlayer player = ExoPlayerUtil.getFullScreenInstance().getPlayer();
+        if(player != null) {
+            mCurrentVidPos = player.getCurrentPosition();
+            mPlayVidWhenReady = player.getPlayWhenReady();
+        }
 
         if (Util.SDK_INT <= 23) {
-            ExoPlayerUtil.getInstance().releaseVideoPlayer();
+            ExoPlayerUtil.getFullScreenInstance().releaseVideoPlayer();
         }
     }
 
@@ -91,7 +94,7 @@ public class FullScreenVideoActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         if (Util.SDK_INT > 23) {
-            ExoPlayerUtil.getInstance().releaseVideoPlayer();
+            ExoPlayerUtil.getFullScreenInstance().releaseVideoPlayer();
         }
     }
 
@@ -108,10 +111,10 @@ public class FullScreenVideoActivity extends AppCompatActivity {
 
     private void initializePlayer() {
         if (!TextUtils.isEmpty(mVidUrl)) {
-            ExoPlayerUtil.getInstance()
+            ExoPlayerUtil.getFullScreenInstance()
                     .preparePlayer(this, Uri.parse(mVidUrl), playerView);
-            ExoPlayerUtil.getInstance().goToForeground();
-            SimpleExoPlayer player = ExoPlayerUtil.getInstance().getPlayer();
+            ExoPlayerUtil.getFullScreenInstance().goToForeground();
+            SimpleExoPlayer player = ExoPlayerUtil.getFullScreenInstance().getPlayer();
             player.seekTo(mCurrentVidPos);
             player.setPlayWhenReady(mPlayVidWhenReady);
         }

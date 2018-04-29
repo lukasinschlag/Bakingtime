@@ -8,7 +8,7 @@
         android:layout_height="64dp"
         android:layout_gravity="center"
         android:contentDescription="@string/play_desc"
-        android:background="null"
+        android:background="@null"
         android:src="@drawable/ic_play"/>
 
     <ImageButton
@@ -17,7 +17,7 @@
         android:layout_height="64dp"
         android:layout_gravity="center"
         android:contentDescription="@string/pause_desc"
-        android:background="null"
+        android:background="@null"
         android:src="@drawable/ic_pause" />
 
 </FrameLayout>

@@ -27,12 +27,20 @@ import com.google.android.exoplayer2.util.Util;
 public class ExoPlayerUtil {
 
     private static ExoPlayerUtil instance;
+    private static ExoPlayerUtil fullScreenInstance;
 
     public static ExoPlayerUtil getInstance() {
         if (instance == null) {
             instance = new ExoPlayerUtil();
         }
         return instance;
+    }
+
+    public static ExoPlayerUtil getFullScreenInstance() {
+        if (fullScreenInstance == null) {
+            fullScreenInstance = new ExoPlayerUtil();
+        }
+        return fullScreenInstance;
     }
 
     private ExoPlayerUtil() {
