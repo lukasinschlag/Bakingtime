@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inschlag.lukas.bakingtime.R;
@@ -14,6 +16,7 @@ import com.inschlag.lukas.bakingtime.RecipeListActivity;
 import com.inschlag.lukas.bakingtime.RecipeStepListActivity;
 import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Recipe;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -57,10 +60,15 @@ public class RecipeListAdapter
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        holder.name.setText(mRecipes.get(position).getName());
-        holder.servings.setText(String.format(mActivity.getResources().getString(R.string.servings), mRecipes.get(position).getServings()));
+        Recipe recipe = mRecipes.get(position);
+        holder.name.setText(recipe.getName());
+        holder.servings.setText(String.format(mActivity.getResources().getString(R.string.servings), recipe.getServings()));
 
-        holder.itemView.setTag(mRecipes.get(position));
+        if (!TextUtils.isEmpty(recipe.getImage())) {
+            Picasso.with(mActivity).load(recipe.getImage()).into(holder.image);
+        }
+
+        holder.itemView.setTag(recipe);
         holder.itemView.setOnClickListener(mOnClickListener);
     }
 
@@ -75,6 +83,8 @@ public class RecipeListAdapter
         TextView name;
         @BindView(R.id.servings)
         TextView servings;
+        @BindView(R.id.image)
+        ImageView image;
 
         ViewHolder(View view) {
             super(view);

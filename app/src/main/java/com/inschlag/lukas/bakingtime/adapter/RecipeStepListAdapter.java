@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inschlag.lukas.bakingtime.FullScreenVideoActivity;
@@ -114,10 +115,14 @@ public class RecipeStepListAdapter
                 holder.itemView.setOnClickListener(mOnIngredientClickListener);
                 break;
             case Constants.VIEWTYPE_STEP:
+                Step step = mValues.get(position-1);
                 ((ViewHolder)holder).text.setText(String.format(mActivity.getResources().getString(R.string.stepX),
-                        position, mValues.get(position-1).getShortDescription()));
+                        position, step.getShortDescription()));
                 holder.itemView.setOnClickListener(mOnStepClickListener);
-                holder.itemView.setTag(mValues.get(position-1));
+                holder.itemView.setTag(step);
+                if(!TextUtils.isEmpty(step.getVideoURL())){
+                    ((ViewHolder) holder).video.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }
@@ -136,6 +141,7 @@ public class RecipeStepListAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.text) TextView text;
+        @BindView(R.id.video) ImageView video;
 
         ViewHolder(View view) {
             super(view);

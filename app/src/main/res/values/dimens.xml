@@ -3,6 +3,7 @@
     <dimen name="app_bar_height">200dp</dimen>
     <dimen name="app_default_padding">8dp</dimen>
     <dimen name="item_width">200dp</dimen>
+    <dimen name="item_video">24dp</dimen>
     <dimen name="text_margin">8dp</dimen>
     <dimen name="content_padding">16dp</dimen>
     <dimen name="progress_size">48dp</dimen>
