@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.util.Util;
 import com.inschlag.lukas.bakingtime.data.Constants;
 import com.inschlag.lukas.bakingtime.data.model.Step;
 import com.inschlag.lukas.bakingtime.utils.ExoPlayerUtil;
@@ -31,7 +33,10 @@ import io.realm.Realm;
 public class RecipeStepDetailFragment extends Fragment {
 
     private int mRecipeId, mStepId;
+    private long mCurrentVidPos;
+    private boolean mPlayVidWhenReady;
     private Step mItem;
+    private PlayerView player;
     public RecipeStepDetailFragment() {}
 
     @Override
@@ -72,31 +77,73 @@ public class RecipeStepDetailFragment extends Fragment {
             mRecipeId = savedInstanceState.getInt(Constants.ARG_ITEM_ID);
             mStepId = savedInstanceState.getInt(Constants.ARG_STEP);
             mItem = loadStep();
+            mPlayVidWhenReady = savedInstanceState.getBoolean(Constants.ARG_VIDEO_PLAY);
+            mCurrentVidPos = savedInstanceState.getLong(Constants.ARG_VIDEO_POS);
         }
 
+        player = rootView.findViewById(R.id.videoPlayer);
         ((TextView) rootView.findViewById(R.id.stepDesc)).setText(mItem.getDescription());
-
-        Context context = getActivity();
-        if (context != null && !TextUtils.isEmpty(mItem.getVideoURL())) {
-            ExoPlayerUtil.getInstance()
-                    .preparePlayer(context, Uri.parse(mItem.getVideoURL()), (PlayerView)rootView.findViewById(R.id.videoPlayer));
-            ExoPlayerUtil.getInstance().goToForeground();
-        }
 
         return rootView;
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || ExoPlayerUtil.getInstance().getPlayer() == null)) {
+            initializePlayer();
+        }
+    }
+
+    @Override
     public void onPause(){
         super.onPause();
-        ExoPlayerUtil.getInstance().goToBackground();
+
+        SimpleExoPlayer player = ExoPlayerUtil.getInstance().getPlayer();
+        mCurrentVidPos = player.getCurrentPosition();
+        mPlayVidWhenReady = player.getPlayWhenReady();
+
+        if (Util.SDK_INT <= 23) {
+            ExoPlayerUtil.getInstance().releaseVideoPlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            ExoPlayerUtil.getInstance().releaseVideoPlayer();
+        }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(Constants.ARG_ITEM_ID, mRecipeId);
         outState.putInt(Constants.ARG_STEP, mStepId);
+        outState.putLong(Constants.ARG_VIDEO_POS, mCurrentVidPos);
+        outState.putBoolean(Constants.ARG_VIDEO_PLAY, mPlayVidWhenReady);
+
         super.onSaveInstanceState(outState);
+    }
+
+    private void initializePlayer(){
+        Context context = getActivity();
+        if (context != null && !TextUtils.isEmpty(mItem.getVideoURL())) {
+            ExoPlayerUtil.getInstance()
+                    .preparePlayer(context, Uri.parse(mItem.getVideoURL()), player);
+            ExoPlayerUtil.getInstance().goToForeground();
+            SimpleExoPlayer player = ExoPlayerUtil.getInstance().getPlayer();
+            player.seekTo(mCurrentVidPos);
+            player.setPlayWhenReady(mPlayVidWhenReady);
+        }
     }
 
     private Step loadStep(){
@@ -110,11 +157,5 @@ public class RecipeStepDetailFragment extends Fragment {
     private void showErr(){
         Log.d(RecipeStepDetailFragment.class.getCanonicalName(), "Step not found");
         Toast.makeText(getActivity(), R.string.stepErr, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        ExoPlayerUtil.getInstance().releaseVideoPlayer();
     }
 }

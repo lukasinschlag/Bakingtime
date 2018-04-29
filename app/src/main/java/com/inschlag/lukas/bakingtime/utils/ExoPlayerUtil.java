@@ -73,6 +73,10 @@ public class ExoPlayerUtil {
         }
     }
 
+    public SimpleExoPlayer getPlayer(){
+        return player;
+    }
+
     public void releaseVideoPlayer() {
         if (player != null) {
             player.release();
